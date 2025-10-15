@@ -6,21 +6,22 @@ int main()
 {
     bool bandera= false;
     string nombre_del_archivo= "nuevo archivo.txt";
-    int semilla_De_codificacion=4; int longitud=4;
+    int semilla_De_codificacion=4; int longitud=6;
 
     int numero_usuarios = 2;
-    int capacidad_usuarios = 2;
+    int capacidad_usuarios = 9;
 
     int* longitudes_cedula_usuarios = new int[capacidad_usuarios]{10, 7};
     int* longitudes_claves_usuarios = new int[capacidad_usuarios]{8, 8};
     int* longitudes_saldos_usuarios = new int[capacidad_usuarios]{5, 4};
-
     int posicion_archivo_usuario=0;
-
     ComprobacionDeArchivo(nombre_del_archivo, bandera, semilla_De_codificacion, longitud, longitudes_cedula_usuarios, longitudes_claves_usuarios, longitudes_saldos_usuarios, numero_usuarios, capacidad_usuarios);
-
+    if (bandera) {
+        generarArchivoTextoDecodificado(nombre_del_archivo, "decodificado.txt", semilla_De_codificacion,longitudes_cedula_usuarios,longitudes_claves_usuarios,longitudes_saldos_usuarios,numero_usuarios);
+    }
     while(bandera){
         int eleccion_menu_ingreso=0;
+        int intentos=0;
         cout << "\nBIENVENIDO A NUESTRO SISTEMA! \n" << endl;
         cout << "Seleccione un modo de ingreso: " <<endl;
         cout << "1. Administrador" <<endl;
@@ -40,6 +41,10 @@ int main()
                 while(bandera_menu_admin){
                     cout << "Ingrese la contrasena"<<endl;
                     bool verificacion_administrador= verificacionAdministrador(nombre_del_archivo, semilla_De_codificacion, longitud);
+                    /*if(intentos>=3){
+                        cout<<"demasiados intentos fallidos "<<endl;
+                        return 0;
+                    }*/
                     if(verificacion_administrador){
                         bool menu_interno_admin=true;
                         char respuesta_menu_admin = ' ';
@@ -58,6 +63,7 @@ int main()
                                 case '1':{
                                     cout<<"\nCreando usuario..."<<endl;
                                     CrearUsuario(nombre_del_archivo, semilla_De_codificacion, longitudes_cedula_usuarios, longitudes_claves_usuarios, longitudes_saldos_usuarios, numero_usuarios, capacidad_usuarios);
+                                    generarArchivoTextoDecodificado(nombre_del_archivo, "decodificado.txt",semilla_De_codificacion,longitudes_cedula_usuarios,longitudes_claves_usuarios,longitudes_saldos_usuarios,numero_usuarios);
                                 }
                                 break;
                                 case '2':
@@ -74,6 +80,7 @@ int main()
                         }
                     }else{
                         cout <<"Contrasena incorrecta"<<endl;
+                        intentos++;
                     }
                 }
 
@@ -84,13 +91,17 @@ int main()
                 bool bandera_repetir_menu_usuario= false;
 
                 while(bandera_validacion_usuario){
-
+                    intentos =0;
                     if(ValidacionUsuario(nombre_del_archivo, semilla_De_codificacion, numero_de_linea_principal, longitudes_cedula_usuarios, posicion_archivo_usuario)){
                         bool validacion_clave_usuario=true;
 
                         while(validacion_clave_usuario){
                             string clave;
                             cout<<"Ingrese la clave: ";cin >> clave;
+                            if(intentos>=3){
+                                cout<<"demasiados intentos fallidos "<<endl;
+                                return 0;
+                            }
                             string clave_guardada= leerUnaLinea(numero_de_linea_principal+1, nombre_del_archivo);
                             clave_guardada= decodificarM2(clave_guardada, semilla_De_codificacion);
                             clave_guardada= quitarCeros(clave_guardada, longitudes_claves_usuarios[posicion_archivo_usuario]);
@@ -102,6 +113,7 @@ int main()
 
                             }else{
                                 cout<<"Clave incorrecta"<<endl;
+                                intentos++;
                             }
                         }
 
@@ -153,8 +165,11 @@ int main()
                                 cout << "\nSu saldo es de: " << valorsaldo << " pesos\n" <<endl;
                                 cout <<"Se le cobraran 1000 pesos por consultar su saldo\n"<<endl;
                                 valorsaldo-= 1000;
-                                ActualizarSaldo(valorsaldo, nombre_del_archivo, numero_de_linea_principal+2, semilla_De_codificacion, longitudes_saldos_usuarios, posicion_archivo_usuario);
-                            }else{
+                                ActualizarSaldo(valorsaldo, nombre_del_archivo, numero_de_linea_principal+2,
+                                                semilla_De_codificacion, longitudes_saldos_usuarios, posicion_archivo_usuario,
+                                                longitudes_cedula_usuarios, longitudes_claves_usuarios,
+                                                longitudes_saldos_usuarios, numero_usuarios);                            }
+                            else{
                                 cout<<"Tiene menos de mil pesos, por lo tanto no puede consultar su saldo"<<endl;
                             }
 
@@ -170,8 +185,11 @@ int main()
                                 cout << "\nSu saldo es de: " << valorsaldo << " pesos\n" <<endl;
                                 cout <<"Se le cobraran 1000 pesos por retirar\n"<<endl;
                                 valorsaldo-=1000;
-                                ActualizarSaldo(valorsaldo, nombre_del_archivo, numero_de_linea_principal+2, semilla_De_codificacion, longitudes_saldos_usuarios, posicion_archivo_usuario);
-                            }else{
+                                ActualizarSaldo(valorsaldo, nombre_del_archivo, numero_de_linea_principal+2,
+                                                semilla_De_codificacion, longitudes_saldos_usuarios, posicion_archivo_usuario,
+                                                longitudes_cedula_usuarios, longitudes_claves_usuarios,
+                                                longitudes_saldos_usuarios, numero_usuarios);                            }
+                            else{
                                 if(valorsaldo<1000){
                                     cout<<"Tiene menos de mil pesos, por lo tanto no puedes retirar"<<endl;
                                 }else if(cantidad_a_retirar>valorsaldo){
@@ -212,7 +230,9 @@ int main()
         cin.clear();
         cin.ignore(255, '\n');
     }
-
+    if (bandera) {
+        generarArchivoTextoDecodificado(nombre_del_archivo, "decodificado.txt", semilla_De_codificacion,longitudes_cedula_usuarios,longitudes_claves_usuarios,longitudes_saldos_usuarios,numero_usuarios);
+    }
     cout<<"\nGracias por usar nuestros servicios!"<<endl;
     cout <<"Vuelva pronto!"<<endl;
 
