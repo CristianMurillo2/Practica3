@@ -7,13 +7,13 @@ int main()
     bool bandera= false;
     string nombre_del_archivo= "nuevo archivo.txt";
     int semilla_De_codificacion=4; int longitud=6;
+    int capacidad_usuarios = 20; // puedes ajustar libremente
+    int numero_usuarios = contarUsuariosEnArchivo(nombre_del_archivo);
 
-    int numero_usuarios = 2;
-    int capacidad_usuarios = 9;
-
-    int* longitudes_cedula_usuarios = new int[capacidad_usuarios]{10, 7};
-    int* longitudes_claves_usuarios = new int[capacidad_usuarios]{8, 8};
-    int* longitudes_saldos_usuarios = new int[capacidad_usuarios]{5, 4};
+    // Creamos arreglos con capacidad inicial amplia
+    int* longitudes_cedula_usuarios = new int[capacidad_usuarios];
+    int* longitudes_claves_usuarios = new int[capacidad_usuarios];
+    int* longitudes_saldos_usuarios = new int[capacidad_usuarios];
     int posicion_archivo_usuario=0;
     ComprobacionDeArchivo(nombre_del_archivo, bandera, semilla_De_codificacion, longitud, longitudes_cedula_usuarios, longitudes_claves_usuarios, longitudes_saldos_usuarios, numero_usuarios, capacidad_usuarios);
     if (bandera) {
@@ -41,10 +41,10 @@ int main()
                 while(bandera_menu_admin){
                     cout << "Ingrese la contrasena"<<endl;
                     bool verificacion_administrador= verificacionAdministrador(nombre_del_archivo, semilla_De_codificacion, longitud);
-                    /*if(intentos>=3){
+                    if(intentos>=3){
                         cout<<"demasiados intentos fallidos "<<endl;
                         return 0;
-                    }*/
+                    }
                     if(verificacion_administrador){
                         bool menu_interno_admin=true;
                         char respuesta_menu_admin = ' ';
@@ -63,6 +63,7 @@ int main()
                                 case '1':{
                                     cout<<"\nCreando usuario..."<<endl;
                                     CrearUsuario(nombre_del_archivo, semilla_De_codificacion, longitudes_cedula_usuarios, longitudes_claves_usuarios, longitudes_saldos_usuarios, numero_usuarios, capacidad_usuarios);
+                                    numero_usuarios++;
                                     generarArchivoTextoDecodificado(nombre_del_archivo, "decodificado.txt",semilla_De_codificacion,longitudes_cedula_usuarios,longitudes_claves_usuarios,longitudes_saldos_usuarios,numero_usuarios);
                                 }
                                 break;

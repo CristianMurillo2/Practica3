@@ -486,3 +486,9 @@ void ActualizarSaldo(int valorSaldo, string nombreArchivo, int linea_a_cambiar, 
     rename("temp.txt", nombreArchivo.c_str());
     generarArchivoTextoDecodificado(nombreArchivo, "decodificado.txt",semilla,longitudes_cedula,longitudes_claves,longitudes_saldos,numero_usuarios);
 }
+int contarUsuariosEnArchivo(string nombreArchivo) {
+    int lineas = NumeroLineasArchivo(nombreArchivo);
+    // Línea 0 es la del administrador, cada usuario tiene 3 líneas
+    if (lineas <= 1) return 0;
+    return (lineas - 1) / 3;
+}

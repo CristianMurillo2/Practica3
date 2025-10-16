@@ -27,5 +27,6 @@ bool VerificarSaldoRetirar(int& saldo_entero, int numero_linea_deseada, string n
 bool VerificarSaldo(int& saldo_entero, int numero_linea_deseada, string nombreArchivo,int semilla, int longitud);
 string EncriptarNuevosValores(int valor, int semilla);
 void ActualizarSaldo(int valorSaldo, string nombreArchivo, int linea_a_cambiar, int semilla,int* vectorsaldo, int posicion,int* longitudes_cedula, int* longitudes_claves,int* longitudes_saldos, int numero_usuarios);
+int contarUsuariosEnArchivo(string nombreArchivo);
 
 #endif // MENU_H
